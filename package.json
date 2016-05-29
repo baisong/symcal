@@ -1,0 +1,22 @@
+{
+  "name": "symcal",
+  "version": "1.0.0",
+  "description": "Convert dates to and from Symmetry454",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/baisong/symcal.git"
+  },
+  "keywords": [
+    "symmetry454"
+  ],
+  "author": "Oren Robinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baisong/symcal/issues"
+  },
+  "homepage": "https://github.com/baisong/symcal#readme"
+}
