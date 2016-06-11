@@ -116,7 +116,7 @@ symcal.ISOStringToSym = function (ISOString, format) {
   var d = new Date(ISOString);
   var gregDate = {
     year: d.getFullYear(),
-    dayOfYear: d.getDayOfYear()
+    dayOfYear: d.getDayNum()
   };
   var fixedDate = symcal.priorElapsedDays(gregDate.year) + gregDate.dayOfYear;
   var symDate = {
