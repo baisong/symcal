@@ -1,11 +1,9 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 // @TODO watch
 // https://docs.npmjs.com/getting-started/creating-node-modules
 // read
 // https://www.terlici.com/2014/08/25/best-practices-express-structure.html
 // http://www.innofied.com/node-js-best-practices/
-
-const helpers = require('./lib/helpers');
-const isostring = require('isostring');
 
 const EPOCH = 1;
 const WEEK_LENGTH = 7;
@@ -24,12 +22,17 @@ const LEAP_COEFFICIENT = 146;
 const MEAN_YEAR = 365.24232081911265;
 
 Date.prototype.getDayNum = function () {
-  var onejan = new Date(this.getFullYear(), 0, 1);
+  var onejan = new Date(symcal.getFullYear(), 0, 1);
   return Math.ceil((this - onejan) / DAY_MILLISECONDS);
 };
 
 var symcal = {};
-
+symcal.mod = function (x, y) {
+    return x - (y * symcal.quotient(x, y));
+};
+symcal.floor = function (x) {
+    return Math.floor(x);
+};
 symcal.isSymDate = function (symDate) {
   if (typeof symDate.year == 'undefined' || !Number.isInteger(Number(symDate.year))) {
     return false;
@@ -42,7 +45,7 @@ symcal.isSymDate = function (symDate) {
 
 symcal.isSymLeapYear = function (symYear) {
   var dividend = (CYCLE_LEAPS * symYear) + LEAP_COEFFICIENT;
-  var accumulator = helpers.mod(dividend, CYCLE_YEARS);
+  var accumulator = symcal.mod(dividend, CYCLE_YEARS);
   return accumulator < CYCLE_LEAPS;
 };
 
@@ -51,11 +54,33 @@ symcal.isSymLeapYear = function (symYear) {
  */
 symcal.symNewYearDay = function (symYear) {
   var priorYear = symYear - 1;
-  var shortTotal = this.symEpoch + (this.yearShort() * priorYear);
-  var leapTotal = this.floor(((CYCLE_LEAPS * priorYear) + LEAP_COEFFICIENT) / CYCLE_YEARS);
-  return shortTotal + (this.weekLength * leapTotal);
+  var shortTotal = symcal.symEpoch + ((7*52) * priorYear);
+  var leapTotal = symcal.floor(((CYCLE_LEAPS * priorYear) + LEAP_COEFFICIENT) / CYCLE_YEARS);
+  return shortTotal + (symcal.weekLength * leapTotal);
 };
-
+symcal.quotient = function (x, y) {
+    return this.floor(x / y);
+};
+symcal.gregYearLength = function (gregYear) {
+    var length = 365;
+    if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
+        length++;
+    }
+    else if (symcal.mod(gregYear, 400) == 0) {
+        length++;
+    }
+    return length;
+};
+symcal.gregYearLength = function (gregYear) {
+    var length = 365;
+    if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
+        length++;
+    }
+    else if (symcal.mod(gregYear, 400) == 0) {
+        length++;
+    }
+    return length;
+};
 symcal.cleanSource = function (input) {
   // @TODO Force noon UTC
   if (input instanceof Date) {
@@ -64,8 +89,8 @@ symcal.cleanSource = function (input) {
   if (isostring(input)) {
     return (new Date(input)).toISOString();
   }
-  if (this.isSymDate(input)) {
-    return this.cleanSymDate(input);
+  if (symcal.isSymDate(input)) {
+    return symcal.cleanSymDate(input);
   }
   return false;
 };
@@ -78,15 +103,15 @@ symcal.cleanSymDate = function (symDate) {
 };
 
 symcal.convert = function (input, format, distinctFormatting) {
-  var source = this.cleanSource(input);
+  var source = symcal.cleanSource(input);
   if (source === false) {
     return false;
   }
   var format = format || 'short';
   if (isostring(source)) {
-    return this.ISOStringToSym(source, format);
+    return symcal.ISOStringToSym(source, format);
   }
-  return this.symToISOstring(source, format);
+  return symcal.symToISOString(source, format);
 };
 
 symcal.ISOStringToSym = function (ISOString, format) {
@@ -95,7 +120,7 @@ symcal.ISOStringToSym = function (ISOString, format) {
     year: d.getFullYear(),
     dayOfYear: d.getDayOfYear()
   };
-  var fixedDate = this.priorElapsedDays(gregDate.year) + gregDate.dayOfYear;
+  var fixedDate = symcal.priorElapsedDays(gregDate.year) + gregDate.dayOfYear;
   var symDate = {
     year: convert.fixedToSymYear(fixedDate)
   };
@@ -105,10 +130,10 @@ symcal.ISOStringToSym = function (ISOString, format) {
 
 symcal.priorElapsedDays = function (gregYear) {
     var priorYear = gregYear - 1;
-    var days = this.gregEpoch + (priorYear * 365);
-    days += this.floor(priorYear / 4);
-    days -= this.floor(priorYear / 100);
-    days += this.floor(priorYear / 400);
+    var days = symcal.gregEpoch + (priorYear * 365);
+    days += symcal.floor(priorYear / 4);
+    days -= symcal.floor(priorYear / 100);
+    days += symcal.floor(priorYear / 400);
     return days;
 };
 
@@ -116,12 +141,12 @@ symcal.shiftGreg = function(isNegativeYear, gregDate) {
   if (isNegativeYear) {
     return {
       year: gregDate.year - 1,
-      dayOfYear: gregDate.dayOfYear + symcal.yearLength(gregDate.year)
+      dayOfYear: gregDate.dayOfYear + symcal.gregYearLength(gregDate.year)
     };
   }
   return {
     year: gregDate.year + 1,
-    dayOfYear: gregDate.dayOfYear - symcal.yearLength(gregDate.year)
+    dayOfYear: gregDate.dayOfYear - symcal.gregYearLength(gregDate.year)
   };
 };
 
@@ -133,7 +158,7 @@ symcal.isResolvedGreg = function(isNegativeYear, gregDate) {
 };
 
 symcal.symToISOString = function (symDate, format) {
-  var fixedDate = this.symNewYearDay(symDate.year) + symDate.dayOfYear - 1;
+  var fixedDate = symcal.symNewYearDay(symDate.year) + symDate.dayOfYear - 1;
   var isNegativeYear = (fixedDate < 365);
   var gregDate = {
     year: 1,
@@ -152,8 +177,8 @@ symcal.formatISOString = function(date, format) {
 };
 
 symcal.fixedToSym = function (fixedDate) {
-  var symYear = this.fixedToSymYear(fixedDate);
-  var startOfYear = this.symNewYearDay(symYear);
+  var symYear = symcal.fixedToSymYear(fixedDate);
+  var startOfYear = symcal.symNewYearDay(symYear);
   var dayOfYear = fixedDate - startOfYear + 1;
   return {
     year: symYear,
@@ -166,26 +191,28 @@ symcal.expandSymDate = function (symDate) {
   symDate.quarter = Math.ceil((4 / 53) * symDate.yearWeek);
   symDate.dayOfQuarter = symDate.dayOfYear - (13 * 7 * (symDate.quarter + 1));
   symDate.weekOfQuarter = Math.ceil(symDate.dayOfQuarter / WEEK_LENGTH);
-  symDate.monthOfQuarter = this.symMonthOfQuarter(symDate);
-  symDate.isLeap = this.isSymLeapYear(symDate.year);
-  symDate.daysInMonth = this.symDaysInMonth(symDate, symDate.isLeap);
-  symDate.monthOfYear = this.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
-  symDate.monthShort = this.getMonthAbbr(symDate.monthOfYear);
-  symDate.monthLong = this.months[symDate.monthOfYear].name;
-  symDate.dayOfMonth = symDate.dayOfYear - this.symDaysBeforeMonth(symDate.monthOfYear);
-  symDate.dayOfMonthSuffix = this.getOrdinalSuffix(symDate.dayOfMonth);
+  symDate.monthOfQuarter = symcal.symMonthOfQuarter(symDate);
+  symDate.isLeap = symcal.isSymLeapYear(symDate.year);
+  symDate.daysInMonth = symcal.symDaysInMonth(symDate, symDate.isLeap);
+  symDate.monthOfYear = symcal.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
+  symDate.monthShort = symcal.getMonthAbbr(symDate.monthOfYear);
+  symDate.monthLong = symcal.months[symDate.monthOfYear].name;
+  symDate.dayOfMonth = symDate.dayOfYear - symcal.symDaysBeforeMonth(symDate.monthOfYear);
+  symDate.dayOfMonthSuffix = symcal.getOrdinalSuffix(symDate.dayOfMonth);
   symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / WEEK_LENGTH);
-  symDate.weekOfMonthSuffix = this.getOrdinalSuffix(symDate.weekOfMonth);
-  symDate.dayOfWeek = this.modulus(symDate.dayOfYear - 1, 7) + 1;
-  symDate.dayOfWeekShort = this.getWeekdayAbbr(symDate.dayOfWeek);
-  symDate.dayOfWeekLong = this.weekdays[symDate.dayOfWeek].name;
-  symDate.micro = this.formatSym(symDate, 'micro');
-  symDate.short = this.formatSym(symDate, 'short');
-  symDate.standard = this.formatSym(symDate, 'standard');
-  symDate.medium = this.formatSym(symDate, 'medium');
-  symDate.long = this.formatSym(symDate, 'long');
-  symDate.daysInYear = (symDate.isLeap) ? this.yearLong() : this.yearShort();
+  symDate.weekOfMonthSuffix = symcal.getOrdinalSuffix(symDate.weekOfMonth);
+  symDate.dayOfWeek = symcal.modulus(symDate.dayOfYear - 1, 7) + 1;
+  symDate.dayOfWeekShort = symcal.getWeekdayAbbr(symDate.dayOfWeek);
+  symDate.dayOfWeekLong = symcal.weekdays[symDate.dayOfWeek].name;
+  symDate.micro = symcal.formatSym(symDate, 'micro');
+  symDate.short = symcal.formatSym(symDate, 'short');
+  symDate.standard = symcal.formatSym(symDate, 'standard');
+  symDate.medium = symcal.formatSym(symDate, 'medium');
+  symDate.long = symcal.formatSym(symDate, 'long');
+  symDate.daysInYear = (symDate.isLeap) ? (7*53) : (7*52);
   return symDate;
 };
 
-module.exports = symcal;
+//module.exports = symcal;
+
+},{}]},{},[1]);
