@@ -169,7 +169,7 @@ symcal.ISOStringToSym = function (ISOString, format) {
 
 symcal.priorElapsedDays = function (gregYear) {
   var priorYear = gregYear - 1;
-  var days = symcal.gregEpoch + (priorYear * 365);
+  var days = (priorYear * 365) + 1;
   days += symcal.floor(priorYear / 4);
   days -= symcal.floor(priorYear / 100);
   days += symcal.floor(priorYear / 400);
