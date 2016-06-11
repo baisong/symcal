@@ -5,13 +5,8 @@
 // http://www.innofied.com/node-js-best-practices/
 
 const isostring = require('isostring');
-
-const EPOCH = 1;
-const WEEK_LENGTH = 7;
-const YEAR_WEEKS = 52;
 // Derivation: 1000 * 60 * 60 * 24
 const DAY_MILLISECONDS = 86400000;
-// Derivation: YEAR_WEEKS * WEEK_LENGTH;
 const YEAR_DAYS = 364;
 // Length of a leap cycle in the standard Symmetry454 calendar system.
 const CYCLE_YEARS = 293;
@@ -55,9 +50,9 @@ symcal.isSymLeapYear = function (symYear) {
  */
 symcal.symNewYearDay = function (symYear) {
   var priorYear = symYear - 1;
-  var shortTotal = EPOCH + ((7*52) * priorYear);
+  var shortTotal = (7 * 52 * priorYear) + 1;
   var leapTotal = symcal.floor(((CYCLE_LEAPS * priorYear) + LEAP_COEFFICIENT) / CYCLE_YEARS);
-  return shortTotal + (symcal.weekLength * leapTotal);
+  return (7 * leapTotal) + shortTotal;
 };
 symcal.quotient = function (x, y) {
     return this.floor(x / y);
@@ -189,10 +184,10 @@ symcal.fixedToSym = function (fixedDate) {
 };
 
 symcal.expandSymDate = function (symDate) {
-  symDate.yearWeek = Math.ceil(symDate.dayOfYear / WEEK_LENGTH);
+  symDate.yearWeek = Math.ceil(symDate.dayOfYear / 7);
   symDate.quarter = Math.ceil((4 / 53) * symDate.yearWeek);
   symDate.dayOfQuarter = symDate.dayOfYear - (13 * 7 * (symDate.quarter + 1));
-  symDate.weekOfQuarter = Math.ceil(symDate.dayOfQuarter / WEEK_LENGTH);
+  symDate.weekOfQuarter = Math.ceil(symDate.dayOfQuarter / 7);
   symDate.monthOfQuarter = symcal.symMonthOfQuarter(symDate);
   symDate.isLeap = symcal.isSymLeapYear(symDate.year);
   symDate.daysInMonth = symcal.symDaysInMonth(symDate, symDate.isLeap);
@@ -201,7 +196,7 @@ symcal.expandSymDate = function (symDate) {
   symDate.monthLong = symcal.months[symDate.monthOfYear].name;
   symDate.dayOfMonth = symDate.dayOfYear - symcal.symDaysBeforeMonth(symDate.monthOfYear);
   symDate.dayOfMonthSuffix = symcal.getOrdinalSuffix(symDate.dayOfMonth);
-  symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / WEEK_LENGTH);
+  symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / 7);
   symDate.weekOfMonthSuffix = symcal.getOrdinalSuffix(symDate.weekOfMonth);
   symDate.dayOfWeek = symcal.modulus(symDate.dayOfYear - 1, 7) + 1;
   symDate.dayOfWeekShort = symcal.getWeekdayAbbr(symDate.dayOfWeek);
