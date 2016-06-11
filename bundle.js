@@ -199,21 +199,34 @@ symcal.fixedToSym = function (fixedDate) {
   };
 };
 
+symcal.symDaysInMonth = function(symDate) {
+    if ((symDate.monthOfQuarter == 2)
+      || (symDate.monthOfQuarter == 3 && symDate.quarter == 4 && symDate.isLeap)) {
+        return 35;
+    }
+    return 28;
+};
+
+
 symcal.expandSymDate = function (symDate) {
   // D.y.week
   symDate.yearWeek = Math.ceil(symDate.dayOfYear / 7);
+
   // D.quarter
   symDate.quarter = Math.ceil((4 / 53) * symDate.yearWeek);
   // D.q.day
   symDate.dayOfQuarter = symDate.dayOfYear - (13 * 7 * (symDate.quarter + 1));
+  // D.q.week
+  symDate.weekOfQuarter = Math.ceil(symDate.dayOfQuarter / 7);
   // D.q.month
   symDate.monthOfQuarter = Math.min(3, Math.ceil((2 / 9) * symDate.weekOfQuarter));
+
   // D.isLeap
   symDate.isLeap = symcal.isSymLeapYear(symDate.year);
   // D.m.days
-  symDate.daysInMonth = symcal.symDaysInMonth(symDate, symDate.isLeap);
+  symDate.daysInMonth = symcal.symDaysInMonth(symDate);
   // D.y.month
-  symDate.monthOfYear = symcal.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
+  symDate.monthOfYear = 3 * (symDate.quarter - 1) + symDate.monthOfQuarter;
   // D.m.abbr
   symDate.monthShort = symcal.getMonthAbbr(symDate.monthOfYear);
   // D.m.name
