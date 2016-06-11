@@ -6,7 +6,7 @@
 // https://www.terlici.com/2014/08/25/best-practices-express-structure.html
 // http://www.innofied.com/node-js-best-practices/
 
-require('isostring');
+const isostring = require('isostring');
 
 const EPOCH = 1;
 const WEEK_LENGTH = 7;
