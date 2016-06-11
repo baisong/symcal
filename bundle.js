@@ -301,7 +301,7 @@ symcal.expandSymDate = function (symDate) {
   symDate.isLeap = symcal.isSymLeapYear(symDate.year);
   // D.m.days
   symDate.daysInMonth = symcal.symDaysInMonth(symDate);
-  // D.y.month
+  // D.month
   symDate.monthOfYear = 3 * (symDate.quarter - 1) + symDate.monthOfQuarter;
   // D.m.abbr
   symDate.monthShort = helpers.getMonthAbbr(symDate.monthOfYear);
@@ -309,18 +309,53 @@ symcal.expandSymDate = function (symDate) {
   symDate.monthLong = helpers.monthNames[symDate.monthOfYear - 1];
   // D.m.day
   symDate.dayOfMonth = symDate.dayOfYear - ((28 * (symDate.monthOfYear - 1)) + (7 * symcal.quotient(symDate.monthOfYear, 3)));
-  // D.m.daySuffix
+  // D.m.d.abbr
   symDate.dayOfMonthSuffix = helpers.getOrdinalSuffix(symDate.dayOfMonth);
-  // D.m.week
+  // D.week
   symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / 7);
-  // D.m.weekSuffix
+  // D.w.name
   symDate.weekOfMonthSuffix = helpers.getOrdinalSuffix(symDate.weekOfMonth);
-  // D.w.day
+  // D.day
   symDate.dayOfWeek = symcal.mod(symDate.dayOfYear - 1, 7) + 1;
-  // D.w.d.abbr
+  // D.d.abbr
   symDate.dayOfWeekShort = helpers.getWeekdayAbbr(symDate.dayOfWeek);
-  // D.w.d.name
+  // D.d.name
   symDate.dayOfWeekLong = helpers.weekdayNames[symDate.dayOfWeek - 1];
+
+  /*
+  var D = {
+    isLeap: false,
+    year: 2015,
+    quarter: 1,
+    month: 1,
+    week: 1,
+    day: 1,
+    y: {
+      week: 1,
+    },
+    q: {
+      month: 1,
+      week: 1,
+      day: 1,
+    },
+    m: {
+      name: "January",
+      abbr: "Jan",
+      day: 1
+      d: {
+        abbr: "1st"
+      }
+    },
+    w: {
+      name: "1st"
+    },
+    d: {
+      name: "Monday",
+      abbr: "Mon"
+    }
+  };
+
+   */
 
   symDate.micro = symcal.formatSym(symDate, 'micro');
   symDate.short = symcal.formatSym(symDate, 'short');
