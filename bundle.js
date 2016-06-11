@@ -20,7 +20,7 @@ const LEAP_COEFFICIENT = 146;
 const MEAN_YEAR = 365.24232081911265;
 
 Date.prototype.getDayNum = function () {
-  var onejan = new Date(symcal.getFullYear(), 0, 1);
+  var onejan = new Date(this.getFullYear(), 0, 1);
   return Math.ceil((this - onejan) / DAY_MILLISECONDS);
 };
 
