@@ -198,23 +198,39 @@ symcal.fixedToSym = function (fixedDate) {
 };
 
 symcal.expandSymDate = function (symDate) {
+  // D.y.week
   symDate.yearWeek = Math.ceil(symDate.dayOfYear / 7);
+  // D.quarter
   symDate.quarter = Math.ceil((4 / 53) * symDate.yearWeek);
+  // D.q.day
   symDate.dayOfQuarter = symDate.dayOfYear - (13 * 7 * (symDate.quarter + 1));
-  symDate.weekOfQuarter = Math.ceil(symDate.dayOfQuarter / 7);
+  // D.q.month
   symDate.monthOfQuarter = Math.min(3, Math.ceil((2 / 9) * symDate.weekOfQuarter));
+  // D.isLeap
   symDate.isLeap = symcal.isSymLeapYear(symDate.year);
+  // D.m.days
   symDate.daysInMonth = symcal.symDaysInMonth(symDate, symDate.isLeap);
+  // D.y.month
   symDate.monthOfYear = symcal.monthsInQuarter() * (symDate.quarter - 1) + symDate.monthOfQuarter;
+  // D.m.abbr
   symDate.monthShort = symcal.getMonthAbbr(symDate.monthOfYear);
+  // D.m.name
   symDate.monthLong = symcal.months[symDate.monthOfYear].name;
+  // D.m.day
   symDate.dayOfMonth = symDate.dayOfYear - symcal.symDaysBeforeMonth(symDate.monthOfYear);
+  // D.m.daySuffix
   symDate.dayOfMonthSuffix = symcal.getOrdinalSuffix(symDate.dayOfMonth);
+  // D.m.week
   symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / 7);
+  // D.m.weekSuffix
   symDate.weekOfMonthSuffix = symcal.getOrdinalSuffix(symDate.weekOfMonth);
+  // D.w.day
   symDate.dayOfWeek = symcal.modulus(symDate.dayOfYear - 1, 7) + 1;
+  // D.w.d.abbr
   symDate.dayOfWeekShort = symcal.getWeekdayAbbr(symDate.dayOfWeek);
+  // D.w.d.name
   symDate.dayOfWeekLong = symcal.weekdays[symDate.dayOfWeek].name;
+
   symDate.micro = symcal.formatSym(symDate, 'micro');
   symDate.short = symcal.formatSym(symDate, 'short');
   symDate.standard = symcal.formatSym(symDate, 'standard');
