@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+ssh://git@github.com/baisong/symcal.git"
   },
+  "dependencies": {
+    "isostring": "0.0.1"
+  },
   "keywords": [
     "symmetry454"
   ],
