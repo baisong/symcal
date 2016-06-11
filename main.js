@@ -214,4 +214,4 @@ symcal.expandSymDate = function (symDate) {
   return symDate;
 };
 
-//module.exports = symcal;
+module.exports = symcal;
