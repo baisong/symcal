@@ -14,7 +14,12 @@ var helpers = {
   monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
   getWeekdayName: function () {},
   getMonthName: function () {},
-  getWeekdayAbbr: function () {},
+  getWeekdayAbbr: function (n) {
+    if (n <= 7 && n >= 1) {
+      return this.weekdayNames[n - 1].substring(0, 3);
+    }
+    return "Und";
+  },
   getMonthAbbr: function (n) {
     if (n <= 12 && n >= 1) {
       return this.monthNames[n - 1].substring(0, 3);
@@ -272,9 +277,9 @@ symcal.expandSymDate = function (symDate) {
   // D.m.abbr
   symDate.monthShort = helpers.getMonthAbbr(symDate.monthOfYear);
   // D.m.name
-  symDate.monthLong = symcal.months[symDate.monthOfYear].name;
+  symDate.monthLong = helpers.monthNames[symDate.monthOfYear - 1];
   // D.m.day
-  symDate.dayOfMonth = symDate.dayOfYear - symcal.symDaysBeforeMonth(symDate.monthOfYear);
+  symDate.dayOfMonth = symDate.dayOfYear - ((28 * (symDate.monthOfYear - 1)) + (7 * symcal.quotient(symDate.monthOfYear, 3)));
   // D.m.daySuffix
   symDate.dayOfMonthSuffix = helpers.getOrdinalSuffix(symDate.dayOfMonth);
   // D.m.week
@@ -282,11 +287,11 @@ symcal.expandSymDate = function (symDate) {
   // D.m.weekSuffix
   symDate.weekOfMonthSuffix = symcal.getOrdinalSuffix(symDate.weekOfMonth);
   // D.w.day
-  symDate.dayOfWeek = symcal.modulus(symDate.dayOfYear - 1, 7) + 1;
+  symDate.dayOfWeek = symcal.mod(symDate.dayOfYear - 1, 7) + 1;
   // D.w.d.abbr
-  symDate.dayOfWeekShort = symcal.getWeekdayAbbr(symDate.dayOfWeek);
+  symDate.dayOfWeekShort = helpers.getWeekdayAbbr(symDate.dayOfWeek);
   // D.w.d.name
-  symDate.dayOfWeekLong = symcal.weekdays[symDate.dayOfWeek].name;
+  symDate.dayOfWeekLong = helpers.weekdays[symDate.dayOfWeek - 1];
 
   symDate.micro = symcal.formatSym(symDate, 'micro');
   symDate.short = symcal.formatSym(symDate, 'short');
