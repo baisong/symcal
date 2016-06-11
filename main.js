@@ -173,7 +173,7 @@ symcal.formatISOString = function (date, format) {
 };
 
 symcal.fixedToSymYear = function (fixedDate) {
-  var symYear = symcal.ceiling((fixedDate - 1) / MEAN_YEAR);
+  var symYear = Math.ceil((fixedDate - 1) / MEAN_YEAR);
   var newYearDay = symcal.symNewYearDay(symYear);
   if (newYearDay < fixedDate) {
     if ((fixedDate - newYearDay) >= (7 * 52)
