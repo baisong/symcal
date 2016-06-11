@@ -7,7 +7,6 @@
 const isostring = require('isostring');
 // Derivation: 1000 * 60 * 60 * 24
 const DAY_MILLISECONDS = 86400000;
-const YEAR_DAYS = 364;
 // Length of a leap cycle in the standard Symmetry454 calendar system.
 const CYCLE_YEARS = 293;
 // The number of leap years during one leap cycle in the Symmetry454 system.
@@ -24,10 +23,10 @@ Date.prototype.getDayNum = function () {
 
 var symcal = {};
 symcal.mod = function (x, y) {
-    return x - (y * symcal.quotient(x, y));
+  return x - (y * symcal.quotient(x, y));
 };
 symcal.floor = function (x) {
-    return Math.floor(x);
+  return Math.floor(x);
 };
 symcal.isSymDate = function (symDate) {
   if (typeof symDate.year == 'undefined' || !Number.isInteger(Number(symDate.year))) {
@@ -55,27 +54,27 @@ symcal.symNewYearDay = function (symYear) {
   return (7 * leapTotal) + shortTotal;
 };
 symcal.quotient = function (x, y) {
-    return this.floor(x / y);
+  return this.floor(x / y);
 };
 symcal.gregYearLength = function (gregYear) {
-    var length = 365;
-    if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
-        length++;
-    }
-    else if (symcal.mod(gregYear, 400) == 0) {
-        length++;
-    }
-    return length;
+  var length = 365;
+  if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
+    length++;
+  }
+  else if (symcal.mod(gregYear, 400) == 0) {
+    length++;
+  }
+  return length;
 };
 symcal.gregYearLength = function (gregYear) {
-    var length = 365;
-    if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
-        length++;
-    }
-    else if (symcal.mod(gregYear, 400) == 0) {
-        length++;
-    }
-    return length;
+  var length = 365;
+  if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
+    length++;
+  }
+  else if (symcal.mod(gregYear, 400) == 0) {
+    length++;
+  }
+  return length;
 };
 symcal.cleanSource = function (input) {
   // @TODO Force noon UTC
@@ -125,15 +124,15 @@ symcal.ISOStringToSym = function (ISOString, format) {
 };
 
 symcal.priorElapsedDays = function (gregYear) {
-    var priorYear = gregYear - 1;
-    var days = symcal.gregEpoch + (priorYear * 365);
-    days += symcal.floor(priorYear / 4);
-    days -= symcal.floor(priorYear / 100);
-    days += symcal.floor(priorYear / 400);
-    return days;
+  var priorYear = gregYear - 1;
+  var days = symcal.gregEpoch + (priorYear * 365);
+  days += symcal.floor(priorYear / 4);
+  days -= symcal.floor(priorYear / 100);
+  days += symcal.floor(priorYear / 400);
+  return days;
 };
 
-symcal.shiftGreg = function(isNegativeYear, gregDate) {
+symcal.shiftGreg = function (isNegativeYear, gregDate) {
   if (isNegativeYear) {
     return {
       year: gregDate.year - 1,
@@ -146,7 +145,7 @@ symcal.shiftGreg = function(isNegativeYear, gregDate) {
   };
 };
 
-symcal.isResolvedGreg = function(isNegativeYear, gregDate) {
+symcal.isResolvedGreg = function (isNegativeYear, gregDate) {
   if (isNegativeYear) {
     return gredDate.dayOfYear >= 0;
   }
@@ -169,8 +168,23 @@ symcal.symToISOString = function (symDate, format) {
   return symcal.formatISOString(d, format);
 };
 
-symcal.formatISOString = function(date, format) {
+symcal.formatISOString = function (date, format) {
   return new Date(date).toISOString();
+};
+
+symcal.fixedToSymYear = function (fixedDate) {
+  var symYear = symcal.ceiling((fixedDate - 1) / MEAN_YEAR);
+  var newYearDay = symcal.symNewYearDay(symYear);
+  if (newYearDay < fixedDate) {
+    if ((fixedDate - newYearDay) >= (7 * 52)
+      && (fixedDate >= symcal.symNewYearDay(symYear + 1))) {
+      symYear++;
+    }
+  }
+  else if (newYearDay > fixedDate) {
+    symYear--;
+  }
+  return symYear;
 };
 
 symcal.fixedToSym = function (fixedDate) {
@@ -206,7 +220,7 @@ symcal.expandSymDate = function (symDate) {
   symDate.standard = symcal.formatSym(symDate, 'standard');
   symDate.medium = symcal.formatSym(symDate, 'medium');
   symDate.long = symcal.formatSym(symDate, 'long');
-  symDate.daysInYear = (symDate.isLeap) ? (7*53) : (7*52);
+  symDate.daysInYear = (symDate.isLeap) ? (7 * 53) : (7 * 52);
   return symDate;
 };
 
