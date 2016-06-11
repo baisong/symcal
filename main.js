@@ -166,7 +166,7 @@ symcal.symToISOString = function (symDate, format) {
   }
   var d = (new Date(gregDate.year, 0)).setDate(gregDate.dayOfYear);
   // @TODO Force noon UTC
-  return formatISOString(d, format);
+  return symcal.formatISOString(d, format);
 };
 
 symcal.formatISOString = function(date, format) {
