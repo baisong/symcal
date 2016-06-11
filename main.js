@@ -242,7 +242,7 @@ symcal.expandSymDate = function (symDate) {
   // D.w.d.abbr
   symDate.dayOfWeekShort = helpers.getWeekdayAbbr(symDate.dayOfWeek);
   // D.w.d.name
-  symDate.dayOfWeekLong = helpers.weekdays[symDate.dayOfWeek - 1];
+  symDate.dayOfWeekLong = helpers.weekdayNames[symDate.dayOfWeek - 1];
 
   symDate.micro = symcal.formatSym(symDate, 'micro');
   symDate.short = symcal.formatSym(symDate, 'short');
