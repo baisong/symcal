@@ -170,7 +170,7 @@ symcal.symToISOString = function (symDate, format) {
 };
 
 symcal.formatISOString = function(date, format) {
-  return new Date().toISOString();
+  return new Date(date).toISOString();
 };
 
 symcal.fixedToSym = function (fixedDate) {
