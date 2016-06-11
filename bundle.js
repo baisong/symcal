@@ -18,13 +18,13 @@ var helpers = {
     if (n <= 7 && n >= 1) {
       return this.weekdayNames[n - 1].substring(0, 3);
     }
-    return "Und";
+    return 'Und';
   },
   getMonthAbbr: function (n) {
     if (n <= 12 && n >= 1) {
       return this.monthNames[n - 1].substring(0, 3);
     }
-    return "Und";
+    return 'Und';
   },
   getOrdinalSuffix: function (number) {
     if (number > 3 && number < 21) return 'th';
@@ -107,10 +107,9 @@ symcal.quotient = function (x, y) {
 };
 symcal.gregYearLength = function (gregYear) {
   var length = 365;
-  if (symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0) {
+  if ((symcal.mod(gregYear, 4) == 0 && symcal.mod(gregYear, 100) != 0)
+    || (symcal.mod(gregYear, 400) == 0)) {
     length++;
-  }
-  else if (symcal.mod(gregYear, 400) == 0) {
     length++;
   }
   return length;
@@ -246,43 +245,43 @@ symcal.fixedToSym = function (fixedDate) {
   };
 };
 
-symcal.symDaysInMonth = function(symDate) {
-    if ((symDate.monthOfQuarter == 2)
-      || (symDate.monthOfQuarter == 3 && symDate.quarter == 4 && symDate.isLeap)) {
-        return 35;
-    }
-    return 28;
+symcal.symDaysInMonth = function (symDate) {
+  if ((symDate.monthOfQuarter == 2)
+    || (symDate.monthOfQuarter == 3 && symDate.quarter == 4 && symDate.isLeap)) {
+    return 35;
+  }
+  return 28;
 };
 
 /**
  * Symmetrical (Distinct formatting)
  * Micro    1999/12/5/7
  * Short    1999/12/5/Sun
- * Standard 5/Sun, Dec 1999
+ * Standard 1999 Dec 5th Sun
  * Medium   5th Sunday, Dec 1999
  * Long     5th Sunday of December 1999
  */
-symcal.formatSym = function(symDate, format) {
-    var formatted = false;
-    switch (format) {
-        case 'micro':
-            formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeek].join('/');
-            break;
-        case 'short':
-            formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeekShort].join('/');
-            break;
-        case 'standard':
-            formatted = [symDate.year, symDate.monthShort, symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekShort].join(' ');
-            break;
-        case 'medium':
-            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong + ',', symDate.monthShort, symDate.year].join(' ');
-            break;
-        case 'long':
-            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong, 'of', symDate.monthLong, symDate.year].join(' ');
-            break;
-    }
+symcal.formatSym = function (symDate, format) {
+  var formatted = false;
+  switch (format) {
+    case 'micro':
+      formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeek].join('/');
+      break;
+    case 'short':
+      formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeekShort].join('/');
+      break;
+    case 'standard':
+      formatted = [symDate.year, symDate.monthShort, symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekShort].join(' ');
+      break;
+    case 'medium':
+      formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong + ',', symDate.monthShort, symDate.year].join(' ');
+      break;
+    case 'long':
+      formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong, 'of', symDate.monthLong, symDate.year].join(' ');
+      break;
+  }
 
-    return formatted;
+  return formatted;
 };
 
 symcal.expandSymDate = function (symDate) {
