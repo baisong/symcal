@@ -214,7 +214,7 @@ symcal.expandSymDate = function (symDate) {
   // D.quarter
   symDate.quarter = Math.ceil((4 / 53) * symDate.yearWeek);
   // D.q.day
-  symDate.dayOfQuarter = symDate.dayOfYear - (13 * 7 * (symDate.quarter + 1));
+  symDate.dayOfQuarter = symDate.dayOfYear - (13 * 7 * (symDate.quarter - 1));
   // D.q.week
   symDate.weekOfQuarter = Math.ceil(symDate.dayOfQuarter / 7);
   // D.q.month
