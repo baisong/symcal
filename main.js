@@ -55,7 +55,7 @@ symcal.isSymLeapYear = function (symYear) {
  */
 symcal.symNewYearDay = function (symYear) {
   var priorYear = symYear - 1;
-  var shortTotal = symcal.symEpoch + ((7*52) * priorYear);
+  var shortTotal = EPOCH + ((7*52) * priorYear);
   var leapTotal = symcal.floor(((CYCLE_LEAPS * priorYear) + LEAP_COEFFICIENT) / CYCLE_YEARS);
   return shortTotal + (symcal.weekLength * leapTotal);
 };
@@ -159,7 +159,8 @@ symcal.isResolvedGreg = function(isNegativeYear, gregDate) {
 };
 
 symcal.symToISOString = function (symDate, format) {
-  var fixedDate = symcal.symNewYearDay(symDate.year) + symDate.dayOfYear - 1;
+  var newYearDay = symcal.symNewYearDay(symDate.year);
+  var fixedDate = newYearDay + symDate.dayOfYear - 1;
   var isNegativeYear = (fixedDate < 365);
   var gregDate = {
     year: 1,
