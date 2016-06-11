@@ -34,6 +34,7 @@ var helpers = {
     }
   }
 };
+module.exports = helpers;
 
 },{}],2:[function(require,module,exports){
 (function (global){
