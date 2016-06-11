@@ -215,3 +215,4 @@ symcal.expandSymDate = function (symDate) {
 };
 
 module.exports = symcal;
+global.symcal = module.exports;
