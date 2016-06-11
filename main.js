@@ -206,7 +206,6 @@ symcal.symDaysInMonth = function(symDate) {
     return 28;
 };
 
-
 symcal.expandSymDate = function (symDate) {
   // D.y.week
   symDate.yearWeek = Math.ceil(symDate.dayOfYear / 7);
@@ -237,7 +236,7 @@ symcal.expandSymDate = function (symDate) {
   // D.m.week
   symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / 7);
   // D.m.weekSuffix
-  symDate.weekOfMonthSuffix = symcal.getOrdinalSuffix(symDate.weekOfMonth);
+  symDate.weekOfMonthSuffix = helpers.getOrdinalSuffix(symDate.weekOfMonth);
   // D.w.day
   symDate.dayOfWeek = symcal.mod(symDate.dayOfYear - 1, 7) + 1;
   // D.w.d.abbr
