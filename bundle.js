@@ -152,7 +152,7 @@ symcal.isResolvedGreg = function(isNegativeYear, gregDate) {
   if (isNegativeYear) {
     return gredDate.dayOfYear >= 0;
   }
-  return gregDate.dayOfYear >= symcal.gregYearLength(gregDate.year);
+  return gregDate.dayOfYear < symcal.gregYearLength(gregDate.year);
 };
 
 symcal.symToISOString = function (symDate, format) {
