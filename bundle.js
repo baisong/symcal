@@ -254,6 +254,37 @@ symcal.symDaysInMonth = function(symDate) {
     return 28;
 };
 
+/**
+ * Symmetrical (Distinct formatting)
+ * Micro    1999/12/5/7
+ * Short    1999/12/5/Sun
+ * Standard 5/Sun, Dec 1999
+ * Medium   5th Sunday, Dec 1999
+ * Long     5th Sunday of December 1999
+ */
+symcal.formatSym = function(symDate, format) {
+    var formatted = false;
+    switch (format) {
+        case 'micro':
+            formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeek].join('/');
+            break;
+        case 'short':
+            formatted = [symDate.year, symDate.monthOfYear, symDate.weekOfMonth, symDate.dayOfWeekShort].join('/');
+            break;
+        case 'standard':
+            formatted = [symDate.year, symDate.monthShort, symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekShort].join(' ');
+            break;
+        case 'medium':
+            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong + ',', symDate.monthShort, symDate.year].join(' ');
+            break;
+        case 'long':
+            formatted = [symDate.weekOfMonth + symDate.weekOfMonthSuffix, symDate.dayOfWeekLong, 'of', symDate.monthLong, symDate.year].join(' ');
+            break;
+    }
+
+    return formatted;
+};
+
 symcal.expandSymDate = function (symDate) {
   // D.y.week
   symDate.yearWeek = Math.ceil(symDate.dayOfYear / 7);
