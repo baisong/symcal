@@ -4,6 +4,7 @@
 // https://www.terlici.com/2014/08/25/best-practices-express-structure.html
 // http://www.innofied.com/node-js-best-practices/
 
+const helpers = require('./lib/helpers');
 const isostring = require('isostring');
 // Derivation: 1000 * 60 * 60 * 24
 const DAY_MILLISECONDS = 86400000;
@@ -226,13 +227,13 @@ symcal.expandSymDate = function (symDate) {
   // D.y.month
   symDate.monthOfYear = 3 * (symDate.quarter - 1) + symDate.monthOfQuarter;
   // D.m.abbr
-  symDate.monthShort = symcal.getMonthAbbr(symDate.monthOfYear);
+  symDate.monthShort = helpers.getMonthAbbr(symDate.monthOfYear);
   // D.m.name
   symDate.monthLong = symcal.months[symDate.monthOfYear].name;
   // D.m.day
   symDate.dayOfMonth = symDate.dayOfYear - symcal.symDaysBeforeMonth(symDate.monthOfYear);
   // D.m.daySuffix
-  symDate.dayOfMonthSuffix = symcal.getOrdinalSuffix(symDate.dayOfMonth);
+  symDate.dayOfMonthSuffix = helpers.getOrdinalSuffix(symDate.dayOfMonth);
   // D.m.week
   symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / 7);
   // D.m.weekSuffix

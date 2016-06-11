@@ -1,4 +1,41 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var helpers = {
+  quotient: function (x, y) {
+    return Math.floor(x / y);
+  },
+  mod: function (x, y) {
+    return x - (y * this.quotient(x, y));
+  },
+  amod: function (x, y) {
+    return y + this.mod(x, -1 * y);
+  },
+  weekdayNames: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  getWeekdayName: function () {},
+  getMonthName: function () {},
+  getWeekdayAbbr: function () {},
+  getMonthAbbr: function (n) {
+    if (n <= 12 && n >= 1) {
+      return this.monthNames[n - 1].substring(0, 3);
+    }
+    return "Und";
+  },
+  getOrdinalSuffix: function (number) {
+    if (number > 3 && number < 21) return 'th';
+    switch (number % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
+};
+
+},{}],2:[function(require,module,exports){
 (function (global){
 // @TODO watch
 // https://docs.npmjs.com/getting-started/creating-node-modules
@@ -6,6 +43,7 @@
 // https://www.terlici.com/2014/08/25/best-practices-express-structure.html
 // http://www.innofied.com/node-js-best-practices/
 
+const helpers = require('./lib/helpers');
 const isostring = require('isostring');
 // Derivation: 1000 * 60 * 60 * 24
 const DAY_MILLISECONDS = 86400000;
@@ -228,13 +266,13 @@ symcal.expandSymDate = function (symDate) {
   // D.y.month
   symDate.monthOfYear = 3 * (symDate.quarter - 1) + symDate.monthOfQuarter;
   // D.m.abbr
-  symDate.monthShort = symcal.getMonthAbbr(symDate.monthOfYear);
+  symDate.monthShort = helpers.getMonthAbbr(symDate.monthOfYear);
   // D.m.name
   symDate.monthLong = symcal.months[symDate.monthOfYear].name;
   // D.m.day
   symDate.dayOfMonth = symDate.dayOfYear - symcal.symDaysBeforeMonth(symDate.monthOfYear);
   // D.m.daySuffix
-  symDate.dayOfMonthSuffix = symcal.getOrdinalSuffix(symDate.dayOfMonth);
+  symDate.dayOfMonthSuffix = helpers.getOrdinalSuffix(symDate.dayOfMonth);
   // D.m.week
   symDate.weekOfMonth = Math.ceil(symDate.dayOfMonth / 7);
   // D.m.weekSuffix
@@ -259,7 +297,7 @@ module.exports = symcal;
 global.symcal = module.exports;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"isostring":2}],2:[function(require,module,exports){
+},{"./lib/helpers":1,"isostring":3}],3:[function(require,module,exports){
 
 module.exports = isDate;
 
@@ -282,4 +320,4 @@ function isDate (val) {
          matcher.test(val) &&
          !isNaN(Date.parse(val));
 }
-},{}]},{},[1]);
+},{}]},{},[2]);
