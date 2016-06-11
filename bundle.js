@@ -119,7 +119,7 @@ symcal.ISOStringToSym = function (ISOString, format) {
   };
   var fixedDate = symcal.priorElapsedDays(gregDate.year) + gregDate.dayOfYear;
   var symDate = {
-    year: convert.fixedToSymYear(fixedDate)
+    year: symcal.fixedToSymYear(fixedDate)
   };
   symDate.dayOfYear = fixedDate - symcal.symNewYearDay(symDate.year) + 1;
   return symcal.expandSymDate(symDate);
