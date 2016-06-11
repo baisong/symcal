@@ -215,7 +215,7 @@ symcal.expandSymDate = function (symDate) {
   return symDate;
 };
 
-//module.exports = symcal;
+module.exports = symcal;
 
 },{"isostring":2}],2:[function(require,module,exports){
 
