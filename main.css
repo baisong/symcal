@@ -1,0 +1,96 @@
+body {
+  font-family: arial, sans-serif;
+}
+.year-title {
+  text-align: center;
+}
+#calendar {
+  clear: both;
+  width: 1200px;
+  margin-bottom: 40px;
+  margin: 10px auto;
+}
+
+.quarter, .month, .week, .day {
+  float: left;
+  display: block;
+}
+
+.month, .week {
+  clear: both;
+}
+
+.month {
+  margin-right: 21px;
+  margin-bottom: 21px;
+}
+
+.qm1 .mw4 .day, .qm2 .mw5 .day, .qm3 .mw4 .day {
+  border-bottom: 1px solid black;
+}
+.qm3.is-leap .mw4 .day {
+  border-bottom: 1px solid gray;
+}
+.qm3 .mw5 .day {
+  border-bottom: 1px solid black;
+}
+.day {
+    width: 38px;
+    height: 38px;
+    border-right: 1px solid lightgray;
+    border-bottom: 1px solid gray;
+    margin: 0;
+    font-size: 10px;
+    padding-top: 2px;
+    padding-left: 2px;
+}
+
+.day:hover {
+  background-color: #6CC6FF;
+}
+
+.wd5 {
+  border-right: 1px solid black;
+}
+.wd7 {
+  border-right: 1px solid black;
+}
+.wd1 {
+  border-left: 1px solid black;
+}
+.monthname {
+  margin: 0;
+  text-transform: uppercase;
+  border-bottom: 1px solid black;
+  font-size: 1em;
+  padding: 2px;
+  text-align: center;
+}
+.date-selected {
+  background: #009afd;
+}
+.quarter-4 {
+  margin-right: -40px;
+}
+.input-wrap {
+  width: 50%;
+  margin: 0 auto;
+  padding: 5px;
+  border: 1px solid gray;
+  border-radius: 2px;
+  text-align: center !important;
+}
+.s454-converter input {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.addyear, .subyear {
+  text-decoration: none;
+  font-weight: normal;
+}
+
+@media print {
+  .s454-converter, .addyear, .subyear {
+    display: none;
+  }
+}
